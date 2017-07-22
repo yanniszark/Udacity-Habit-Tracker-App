@@ -29,7 +29,8 @@ public class HabitsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        displayDatabaseInfo();
+        Cursor cursor = queryDatabase();
+        displayResults(cursor);
     }
 
     /**
@@ -46,14 +47,13 @@ public class HabitsActivity extends AppCompatActivity {
         values.put(HabitEntry.COLUMN_HABBIT_FREQUENCY, HabitEntry.FREQUENCY_HIGH);
         values.put(HabitEntry.COLUMN_HABBIT_TIME_OF_THE_DAY, HabitEntry.TIME_NIGHT);
 
-
-        long newRowId = db.insert(HabitEntry.TABLE_NAME, null, values);
+        db.insert(HabitEntry.TABLE_NAME, null, values);
     }
 
     /**
      * Helper method to display all the habits in the database.
      */
-    private void displayDatabaseInfo() {
+    private Cursor queryDatabase() {
         // Create and/or open a database to read from it
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
@@ -76,6 +76,10 @@ public class HabitsActivity extends AppCompatActivity {
                 null,                  // Don't filter by row groups
                 null);                   // The sort order
 
+        return cursor;
+    }
+
+    private void displayResults(Cursor cursor) {
         TextView displayView = (TextView) findViewById(R.id.textview_habits);
 
         try {
